@@ -1,2 +1,2 @@
-### pl_sql
-Oracle pl-sql
+# pl_sql
+Oracle pl-sql tanfolyam minta feladatok
