@@ -1,0 +1,228 @@
+SELECT t_seq.NEXTVAL 
+  INTO v_Id
+  FROM dual;
+
+INSERT INTO t(id, oszlop_explicit_ertekkel)
+  VALUES(v_Id, 'ERTEK');
+
+SELECT oszlop_default_ertekkel
+  FROM t
+  INTO v_Mi_lett_az_erteke
+ WHERE id = v_Id;
+
+-- helyette
+
+INSERT INTO t(id, oszlop_explicit_ertekkel)
+  VALUES(t_seq.NEXTVAL, 'ERTEK')
+  RETURNING id, oszlop_default_ertekkel
+    INTO v_Id, v_Mi_lett_az_erteke;
+
+
+----------------------------------------------------------------------
+
+FOR v_Konyv IN (
+  SELECT id, cim FROM konyv
+) LOOP
+  FOR v_Kocsonzo IN (
+    SELECT kolcsonzo FROM kolcsonzes WHERE konyv = v_Konyv.id
+  ) LOOP
+    ...
+  END LOOP;
+END LOOP;
+
+-- helyette
+
+FOR v_Konyv_kolcsonzo IN (
+  SELECT kv.id, kv.cim, ko.kolcsonzo
+    FROM konyv kv, kolcsonzes ko
+   WHERE ko.konyv = kv.id
+) LOOP
+  ...
+END LOOP;
+
+
+----------------------------------------------------------------------
+
+FOR i IN 1..100
+LOOP
+  INSERT INTO t(sorszam, paros_paratlan) 
+    VALUES(i, DECODE(MOD(ROWNUM,2),0, 'páros', 'páratlan'))
+  ;
+END LOOP;
+
+-- helyette
+
+INSERT INTO t(sorszam, paros_paratlan) 
+  SELECT ROWNUM sorszam
+       , DECODE(MOD(ROWNUM,2),0, 'páros', 'páratlan') paros_paratlan
+    FROM dual 
+    CONNECT BY LEVEL <= 100
+;
+
+----------------------------------------------------------------------
+
+SELECT DISTINCT SQRT(x) FROM ...
+
+-- helyette
+
+SELECT SQRT(distinct_x)
+  FROM (SELECT DISTINCT x AS distinct_x FROM ... )
+
+----------------------------------------------------------------------
+
+...
+
+TYPE t_num_tab IS TABLE OF NUMBER INDEX BY VARCHAR2(1000);
+v_Cache_tab t_num_tab;
+
+...
+
+FUNCTION fn(p1 NUMBER, p2 VARCHAR2) RETURN NUMBER
+IS
+...
+
+
+FUNCTION cached_fn(p1 NUMBER, p2 VARCHAR2) RETURN NUMBER
+IS
+  v_Key VARCHAR2(1000);
+  rv    NUMBER;
+BEGIN
+  v_Key := p1 || '#' || p2;
+  IF v_Cache_tab.EXISTS(v_Key) THEN
+    rv := v_Cache_tab(v_Key);
+  ELSE
+    rv := fn(p1, p2);
+    v_Cache_tab(v_Key) := rv;
+  END IF;
+  RETURN rv;
+END cached_fn;
+
+...
+
+----------------------------------------------------------------------
+
+SET SERVEROUTPUT ON FORMAT WRAPPED
+DECLARE
+  a  BINARY_DOUBLE := 1;
+  b  BINARY_DOUBLE := 10;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Egy tized: ' || TO_NUMBER(a/b));
+END;
+/
+-- Egy tized: ,10000000000000001
+
+----------------------------------------------------------------------
+
+ALTER SESSION SET NLS_COMP=ANSI;
+
+DECLARE
+  s                VARCHAR2(100);
+  TYPE t_karakteres_kulcsok IS 
+    TABLE OF BOOLEAN INDEX BY s%TYPE;
+
+  v_Rendezo_tabla  t_karakteres_kulcsok;
+
+BEGIN
+  v_Rendezo_tabla('öszvér') := TRUE;
+  v_Rendezo_tabla('ló')     := TRUE;
+  v_Rendezo_tabla('szamár') := TRUE;
+  s := v_Rendezo_tabla.FIRST;
+  WHILE s IS NOT NULL
+  LOOP
+    DBMS_OUTPUT.PUT_LINE(s);
+    s := v_Rendezo_tabla.NEXT(s);
+  END LOOP;
+END;
+/
+/*
+ló
+öszvér
+szamár
+ */
+
+----------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE proc(p_Number_fuggveny VARCHAR2) 
+IS
+  v_Num NUMBER;
+BEGIN
+  EXECUTE IMMEDIATE 'BEGIN :x := ' || p_Number_fuggveny || '; END;'
+    USING OUT v_Num;
+  DBMS_OUTPUT.PUT_LINE('Num: ' || v_Num);
+END proc;
+/
+
+CREATE OR REPLACE FUNCTION a_number_fuggveny_1 RETURN NUMBER
+IS
+BEGIN
+  RETURN 1;
+END a_number_fuggveny_1;
+/
+
+SET SERVEROUTPUT ON FORMAT WRAPPED
+EXEC proc('a_number_fuggveny_1');
+-- Num: 1
+
+--------------
+-- helyette --
+--------------
+
+CREATE OR REPLACE TYPE T_Obj1 IS OBJECT (
+  attr CHAR(1),
+  MEMBER FUNCTION a_number_fuggveny RETURN NUMBER
+)
+NOT FINAL NOT INSTANTIABLE
+/
+
+CREATE OR REPLACE TYPE T_Obj2 UNDER T_Obj1(
+  CONSTRUCTOR FUNCTION T_Obj2 RETURN SELF AS RESULT,
+  OVERRIDING MEMBER FUNCTION a_number_fuggveny RETURN NUMBER
+)
+/
+
+CREATE OR REPLACE TYPE BODY T_Obj2 IS
+  CONSTRUCTOR FUNCTION T_Obj2 RETURN SELF AS RESULT
+  IS BEGIN RETURN; END;
+
+  OVERRIDING MEMBER FUNCTION a_number_fuggveny RETURN NUMBER
+  IS
+  BEGIN
+    RETURN 1;
+  END a_number_fuggveny;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE proc(p_Obj T_Obj1)
+IS
+  v_Num NUMBER;
+BEGIN
+  v_Num := p_Obj.a_number_fuggveny;
+  DBMS_OUTPUT.PUT_LINE('Num: ' || v_Num);
+END proc;
+/
+
+SET SERVEROUTPUT ON FORMAT WRAPPED
+EXEC proc(T_Obj2());
+-- Num: 1
+
+----------------------------------------------------------------------
+
+BEGIN
+  ...
+
+  OPEN cur;
+  ...
+
+  CLOSE cur;
+  ...
+
+EXCEPTION
+  WHEN kivétel THEN
+    IF cur%ISOPEN THEN CLOSE cur; END IF;
+    ... -- Kivétel kezelése
+
+  WHEN OTHERS THEN
+    IF cur%ISOPEN THEN CLOSE cur; END IF;
+    RAISE; -- Kivétel továbbadása a kurzor lezárása után.
+
+END;
