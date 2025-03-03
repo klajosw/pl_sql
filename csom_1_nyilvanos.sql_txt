@@ -1,0 +1,34 @@
+CREATE OR REPLACE PACKAGE konyvtar_csomag
+AS
+  ...
+
+  CURSOR cur_lejart_kolcsonzesek(
+    p_Datum DATE DEFAULT SYSDATE
+  ) RETURN t_lejart_rec;
+
+  ...
+  
+END;
+
+CREATE OR REPLACE PACKAGE BODY konyvtar_csomag
+AS
+  ...
+
+  /* Megadja a lejárt kölcsönzéseket. */
+  CURSOR cur_lejart_kolcsonzesek(
+    p_Datum DATE DEFAULT SYSDATE
+  ) RETURN t_lejart_rec
+  IS
+    SELECT kolcsonzo, konyv, datum,
+           hosszabbitva, megjegyzes, napok
+      FROM 
+        (SELECT kolcsonzo, konyv, datum, hosszabbitva, megjegyzes, 
+                TRUNC(p_Datum, 'DD') - TRUNC(datum, 'DD')
+                  - 30*(hosszabbitva+1) AS napok
+           FROM kolcsonzes) 
+        WHERE napok > 0
+  ;
+
+  ...
+
+END;

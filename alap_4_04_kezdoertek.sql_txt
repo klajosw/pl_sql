@@ -1,0 +1,21 @@
+  -- nevesített konstans deklarációja, az értékadó kifejezés egy
+  -- függvényhívás
+  c_Most       CONSTANT DATE := SYSDATE;
+
+  -- változódeklaráció kezdõértékadás nélkül
+  v_Egeszszam  PLS_INTEGER;
+  v_Logikai    BOOLEAN;
+
+  -- változódeklaráció kezdõértékadással
+  v_Pozitiv    POSITIVEN DEFAULT 1;
+  v_Idopecset  TIMESTAMP := CURRENT_TIMESTAMP;
+
+  -- kezdõértékadás rekordtípus mezõjének
+  TYPE t_Kiserlet IS RECORD (
+     leiras       VARCHAR2(20),
+     probalkozas  NUMBER := 0,
+     sikeres      NUMBER := 0
+  );
+
+  -- rekord mezõinek csak a típus deklarációban lehet kezdõértéket adni
+  v_Kiserlet   t_Kiserlet; 

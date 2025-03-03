@@ -1,0 +1,19 @@
+  SUBTYPE t_szam   IS NUMBER;
+  SUBTYPE t_evszam IS NUMBER(4,0);
+
+  SUBTYPE t_tiz   IS NUMBER(10);
+  SUBTYPE t_egy   IS t_tiz(1);      -- NUMBER(1)
+  SUBTYPE t_ezres IS t_tiz(10, -3); -- NUMBER(10, -3)
+
+  SUBTYPE t_nev  IS VARCHAR2(40);
+  -- felüldefiniáljuk az elõzõ hosszmegszorítást
+  SUBTYPE t_nev2 IS t_nev(50);
+
+  v_Tiz   t_tiz := 12345678901; -- túl nagy az érték pontossága
+  v_Egy   t_egy := 12345;       -- túl nagy az érték pontossága
+  v_Ezres t_ezres := 12345;     -- 12000 tárolódik
+
+  SUBTYPE t_szo IS VARCHAR2;
+
+  v_szo   t_szo(10);
+  v_szo2  t_szo; -- Hiba, nincs megadva a hossz

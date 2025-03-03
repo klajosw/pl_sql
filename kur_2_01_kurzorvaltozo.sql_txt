@@ -1,0 +1,15 @@
+DECLARE
+
+  TYPE t_egyed IS RECORD ...;
+
+  /* gyenge típusú REF CURSOR */
+  TYPE t_refcursor IS REF CURSOR;
+  /* erõs típusú REF CURSOR */
+  TYPE t_ref_egyed IS REF CURSOR RETURN t_egyed;
+
+  /* Kurzorváltozók */
+  v_Refcursor1     t_refcursor;
+  v_Refcursor2     SYS_REFCURSOR; -- ez is gyenge típusú
+  v_Egyedek1       t_ref_egyed;
+  v_Egyedek2       t_ref_egyed;
+  ...

@@ -1,0 +1,7 @@
+DECLARE
+    -- Hibás paramétertípus, nem lehet korlátozást megadni
+    PROCEDURE proc1(p_nev VARCHAR2(100) NOT NULL) ...
+
+    -- Viszont mégis van rá mód programozói altípus segítségével
+    SUBTYPE t_nev IS VARCHAR2(100) NOT NULL;
+    PROCEDURE proc2(p_nev t_nev) ...

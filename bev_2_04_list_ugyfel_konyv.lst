@@ -1,0 +1,54 @@
+SQL> 
+SQL> SELECT * FROM ugyfel_konyv;
+
+ UGYFEL_ID UGYFEL
+---------- ----------------------------------------------------------------------------------------------------
+  KONYV_ID KONYV
+---------- ----------------------------------------------------------------------------------------------------
+        25 Erdei Anita
+        35 A critical introduction to twentieth-century American drama - Volume 2
+
+        35 Jaripekka Hämälainen
+        35 A critical introduction to twentieth-century American drama - Volume 2
+
+        35 Jaripekka Hämälainen
+        40 The Norton Anthology of American Literature - Second Edition - Volume 2
+
+        15 József István
+        20 ECOOP 2001 - Object-Oriented Programming
+
+        15 József István
+        25 Java - start!
+
+        15 József István
+        50 Matematikai Kézikönyv
+
+        15 József István
+        45 Matematikai zseblexikon
+
+        15 József István
+        15 Piszkos Fred és a többiek
+
+        30 Komor Ágnes
+         5 A római jog története és institúciói
+
+        30 Komor Ágnes
+        10 A teljesség felé
+
+        10 Szabó Máté István
+        50 Matematikai Kézikönyv
+
+        10 Szabó Máté István
+        45 Matematikai zseblexikon
+
+        10 Szabó Máté István
+        30 SQL:1999 Understanding Relational Language Components
+
+        20 Tóth László
+        30 SQL:1999 Understanding Relational Language Components
+
+
+14 sor kijelölve.
+
+SQL> 
+SQL> SPOOL OFF;

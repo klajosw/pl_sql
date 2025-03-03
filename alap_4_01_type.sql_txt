@@ -1,0 +1,9 @@
+  -- A v_Telszam deklarációja az ugyfel táblához kötõdik a %TYPE miatt.
+  v_Telszam    ugyfel.tel_szam%TYPE DEFAULT '06-52-123456';
+
+  -- Az új változót felhasználhatjuk újabb deklarációban.
+  v_Telszam2   v_Telszam%TYPE;
+
+  -- A v_Telszam%TYPE típus azonban nem tartalmaz kezdõértékadást!
+  -- Így v_Telszam2 típusa megegyezik v_Telszam típusával,
+  -- kezdõértéke azonban NULL lesz.

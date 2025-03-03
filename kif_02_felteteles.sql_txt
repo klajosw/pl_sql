@@ -1,0 +1,17 @@
+DECLARE
+  v_Osztalyzat NUMBER(1);
+  v_Minosites  VARCHAR2(10);
+BEGIN
+  ...
+  V_Minosites :=
+    CASE
+        WHEN v_Osztalyzat = 5 THEN 'Jeles'
+        WHEN v_Osztalyzat = 4 THEN 'Jó'
+        WHEN v_Osztalyzat = 3 THEN 'Közepes'
+        WHEN v_Osztalyzat = 2 THEN 'Elégséges'
+        WHEN v_Osztalyzat = 1 THEN 'Elégtelen'
+        ELSE 'Nincs ilyen osztályzat'
+    END;
+  ...
+END;
+/

@@ -1,0 +1,6 @@
+SET PAGESIZE 1000 LINESIZE 120 ECHO ON TRIMSPOOL ON;
+SPOOL bev_2_04_list_ugyfel_konyv.lst
+
+SELECT * FROM ugyfel_konyv;
+
+SPOOL OFF;

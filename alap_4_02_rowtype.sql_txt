@@ -1,0 +1,3 @@
+  -- az ugyfel tábla szerkezetével megegyezõ rekordtípusú változók
+  v_Ugyfel     ugyfel%ROWTYPE;
+  v_Ugyfel2    v_ugyfel%TYPE;

@@ -1,0 +1,15 @@
+CREATE OR REPLACE PACKAGE BODY konyvtar_csomag
+AS
+  ...
+  v_Stat            t_statisztika_rec;
+  ...
+
+  /* Beállítja a v_Stat utolsó módosítási dátumát. */
+  PROCEDURE stat_akt
+  IS
+  BEGIN
+    v_Stat.utolso_modositas := SYSDATE;
+  END stat_akt;
+  ...
+
+END;

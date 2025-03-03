@@ -1,0 +1,2 @@
+  -- nem lehet az altípusban megszorítás
+  SUBTYPE t_skala(skala) IS NUMBER(10,skala); 

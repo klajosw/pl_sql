@@ -1,0 +1,9 @@
+  ...
+  BEGIN
+    v_Datum := hozzaad(SYSDATE, 1, 'kiskutyafüle');
+  EXCEPTION
+    WHEN hibas_argumentum THEN
+      DBMS_OUTPUT.PUT_LINE('Blokk1 - hibás argumentum: ' 
+        || SQLCODE || ', ' || SQLERRM);
+  END blokk1;
+  ...

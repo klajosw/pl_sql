@@ -1,0 +1,57 @@
+DECLARE
+  v_Nagyobb NUMBER;
+  x         NUMBER;
+  y         NUMBER;
+  z         NUMBER;
+BEGIN
+  ...
+
+  v_Nagyobb := x;
+  IF x < y THEN
+    v_Nagyobb := y;
+  END IF;
+  ...
+
+  v_Nagyobb := x;
+  IF x < y THEN
+    v_Nagyobb := y;
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('x tényleg nem kisebb y-nál.');
+  END IF;
+  ...
+
+  IF x < y THEN
+    v_Nagyobb := y;
+  ELSE
+    v_Nagyobb := x;
+  END IF;
+  ...
+  
+  IF x > y THEN
+    IF x > z THEN
+      v_Nagyobb := x;
+    ELSE
+      v_Nagyobb := z;
+    END IF;
+  ELSE
+    IF y > z THEN
+      v_Nagyobb := y;
+    ELSE
+      v_Nagyobb := z;
+    END IF;
+  END IF;
+  ...
+  
+  IF x < y THEN
+      DBMS_OUTPUT.PUT_LINE('x kisebb, mint y');
+      v_Nagyobb = x;
+  ELSIF x > y THEN
+      DBMS_OUTPUT.PUT_LINE('x nagyobb, mint y');
+      v_Nagyobb = y;
+  ELSE
+      DBMS_OUTPUT.PUT_LINE('x és y egyenlõk');
+      v_Nagyobb = x; -- lehetne y is
+  END IF;
+  ...
+
+END;
